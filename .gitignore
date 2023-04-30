@@ -33,3 +33,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+#google
+shop-384517-firebase-adminsdk-4walh-21fdb64265.json
