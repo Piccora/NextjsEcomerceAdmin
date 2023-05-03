@@ -30,7 +30,8 @@ export default async function handleUpload(req, res) {
                 }
                 return res.status(200).send(urls);
             });
-        } else {
+        }
+        else {
             return res.status(405).send('Method Not Allowed')
         }
     }

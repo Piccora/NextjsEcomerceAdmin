@@ -9,6 +9,7 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
     const [description, setDescription] = useState(existingDescription || '')
     const [price, setPrice] = useState(existingPrice || '')
     const [images, setImages] = useState(existingImages || [])
+    const [deletedImages, setDeletedImages] = useState([])
     const [category, setCategory] = useState(existingCategory || '')
     const [productProperties, setProductProperties] = useState(existingProperties || {})
     const [goToProducts, setGoToProducts] = useState(false)
@@ -29,7 +30,7 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
     };
     const setProduct = async (ev) => {//create product and update it if exists
         ev.preventDefault()
-        const data = { title, description, price, images, category, properties: productProperties }
+        const data = { title, description, price, images, category, properties: productProperties,deletedImages }
         if (_id) {
             //update
             await axios.put(`/api/products`, { ...data, _id })
@@ -58,7 +59,17 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
             setIsUploading(false)
         }
     };
-
+    const tempRemoveImage = (link) => {
+        var indexToRemove = images.indexOf(link)
+        setImages(prev => {
+            return [...prev].filter((p, pIndex) => {
+                return pIndex !== indexToRemove
+            })
+        })
+        setDeletedImages(prev => {
+            return [...prev, link]
+        })
+    }
     const updateImagesOrder = (images) => {
         setImages(images)
     }
@@ -76,7 +87,7 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
         propertiesToFill.push(...selCatInfo.properties)
         while (selCatInfo.parentCategory != '') {
             const parentCatInfo = categories.find(({ _id }) => _id === selCatInfo.parentCategory)
-            if (typeof(parentCatInfo) == "undefined") {
+            if (typeof (parentCatInfo) == "undefined") {
                 break
             }
             propertiesToFill.push(...parentCatInfo.properties)
@@ -116,6 +127,11 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
                     {!!images?.length > 0 && images.map(link => {
                         return (
                             <div key={link} className=" h-24">
+                                <button type="button" onClick={() => tempRemoveImage(link)} className="absolute text-red-500 ">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 stroke-[3px]">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
                                 <img src={link} alt="" className="rounded-lg" />
                             </div>
                         )
@@ -141,6 +157,7 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
             <label>Price</label>
             <input type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
             <button type="submit" className="btn-primary">Save Product</button>
+            <button type="button" onClick={()=>setGoToProducts(true)} className="btn-default ml-5">Back</button>
         </form>
     )
 }
