@@ -6,7 +6,13 @@ import deleteProduct from "@/lib/firebase/deleteProduct"
 import { isAdminRequest } from "./auth/[...nextauth]"
 import { Storage } from '@google-cloud/storage';
 
-const storage = new Storage();
+const storage = new Storage({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    credentials: {
+      client_email: process.env.FIREBASE_CLIENT_EMAIL,
+      private_key: process.env.FIREBASE_PRIVATE_KEY,
+    },
+  });
 const bucket = storage.bucket('shop-384517.appspot.com');
 const deleteByURL = (imagesList) => {
     for (const imageURL of imagesList) {

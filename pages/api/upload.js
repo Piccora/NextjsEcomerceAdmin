@@ -2,7 +2,13 @@ import { IncomingForm } from 'formidable';
 import { Storage } from '@google-cloud/storage';
 import { isAdminRequest } from './auth/[...nextauth]';
 
-const storage = new Storage();
+const storage = new Storage({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    credentials: {
+      client_email: process.env.FIREBASE_CLIENT_EMAIL,
+      private_key: process.env.FIREBASE_PRIVATE_KEY,
+    },
+  });
 const bucket = storage.bucket('shop-384517.appspot.com');
 export default async function handleUpload(req, res) {
     await isAdminRequest(req, res);
