@@ -10,9 +10,15 @@ export default function Products() {
             setProducts(res.data)
         })
     }, [])
+    const deleteUnsuedImages = ()=>{
+        axios.delete('/api/products').then(res => {
+            console.log('successfully deleted')
+        })
+    }
     return (
         <Layout>
             <Link href={'/products/new'} className="btn-primary">Add new products</Link>
+            <button type="button" className="ml-6 btn-primary" onClick={()=>deleteUnsuedImages()}>Delete unused photos</button>
             <table className="basic mt-2">
                 <thead>
                     <tr>

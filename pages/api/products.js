@@ -13,7 +13,8 @@ const storage = new Storage({
       private_key: process.env.FIREBASE_PRIVATE_KEY,
     },
   });
-const bucket = storage.bucket('shop-384517.appspot.com');
+const bucketName=process.env.BUCKET_NAME
+const bucket = storage.bucket(bucketName);
 const deleteByURL = (imagesList) => {
     for (const imageURL of imagesList) {
         const fileName = imageURL.slice(55);
@@ -96,6 +97,22 @@ export default async function handle(req, res) {
                         console.log('error', error);
                         return res.status(500).send(error);
                     })
+            }else{
+                let data = await getProducts()
+                let proList=data.map((product) =>{ return product.images})
+                const imageList=proList.flat(1)
+                const [files] = await bucket.getFiles({prefix:'ProductImages/'});
+                const url = 'https://storage.googleapis.com/'
+                let delList=[]
+                files.forEach(file => {
+                    let publicUrl = url.concat(bucketName,'/',file.name)
+                    if(publicUrl!='https://storage.googleapis.com/shop-384517.appspot.com/ProductImages/' && !imageList.includes(publicUrl) ){
+                        delList.push(publicUrl)
+                    }
+                  })
+                deleteByURL(delList)
+                console.log(delList,imageList)
+                return res.status(200).send('ok')
             }
         }
         else {
