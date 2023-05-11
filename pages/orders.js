@@ -21,7 +21,8 @@ export default function OrdersPage() {
           </tr>
         </thead>
         <tbody>
-        {orders.length > 0 && orders.map(order => (
+        {orders.length > 0 && orders.map(order => {
+        return(
           <tr key={order._id} className="border-b-2">
             <td>{(new Date(order.createdAt)).toLocaleString()}
             </td>
@@ -40,7 +41,7 @@ export default function OrdersPage() {
               ))}
             </td>
           </tr>
-        ))}
+        )})}
         </tbody>
       </table>
     </Layout>
