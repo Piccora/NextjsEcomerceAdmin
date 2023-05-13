@@ -2,11 +2,19 @@ import Layout from "@/components/Layout";
 import {useEffect, useState} from "react";
 import axios from "axios";
 
+export function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 export default function OrdersPage() {
   const [orders,setOrders] = useState([]);
   useEffect(() => {
-    axios.get('/api/orders').then(response => {
-      setOrders(response.data);
+    axios.get("/api/orders").then((response) => {
+      const sortedOrders = response.data.sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return dateB - dateA; // Sort in descending order
+      });
+      setOrders(sortedOrders);
     });
   }, []);
   return (
@@ -20,8 +28,9 @@ export default function OrdersPage() {
             <th>Products</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="slim">
         {orders.length > 0 && orders.map(order => {
+          const paid=order.transactionID!=''&& order.transactionID!=null && order.transactionID!=undefined
         return(
           <tr key={order._id} className="border-b-2">
             <td>{(new Date(order.createdAt)).toLocaleString()}
@@ -30,7 +39,8 @@ export default function OrdersPage() {
               {order.name} <br />
               {order.email}<br />
               {order.address} <br />
-              <span className={order.paid ? 'text-green-600' : 'text-red-600'}>{order.paid ? 'Paid' : 'Not paid'}</span>
+              {numberWithCommas(order.cost)}₫<br />
+              <span className={paid ? 'text-green-600' : 'text-red-600'}>{paid ? `Paid :${order.transactionID}` : 'Not paid'}</span>
             </td>
             <td>
               {order.order.map(l => (

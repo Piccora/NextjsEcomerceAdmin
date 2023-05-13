@@ -57,6 +57,9 @@ table.basic thead tr td{
 table.basic a{
   @apply  text-sm py-1 px-2 rounded-md inline-flex gap-1 mx-1;
 }
+tbody.slim tr td {
+  @apply p-1
+}
 .btn-default, .btn-red{
   @apply px-4 py-1 rounded-md
 }
