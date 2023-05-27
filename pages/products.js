@@ -2,6 +2,7 @@ import Layout from "@/components/Layout";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Spinner from "@/components/Spinner";
 
 export default function Products() {
     const [products, setProducts] = useState([])
@@ -10,7 +11,7 @@ export default function Products() {
             setProducts(res.data)
         })
     }, [])
-    const deleteUnsuedImages = ()=>{
+    const deleteUnsuedImages = () => {
         axios.delete('/api/products').then(res => {
             console.log('successfully deleted')
         })
@@ -18,7 +19,7 @@ export default function Products() {
     return (
         <Layout>
             <Link href={'/products/new'} className="btn-primary">Add new products</Link>
-            <button type="button" className="ml-6 btn-primary" onClick={()=>deleteUnsuedImages()}>Delete unused photos</button>
+            <button type="button" className="ml-6 btn-primary" onClick={() => deleteUnsuedImages()}>Delete unused photos</button>
             <table className="basic mt-2">
                 <thead>
                     <tr>
@@ -48,6 +49,11 @@ export default function Products() {
                     ))}
                 </tbody>
             </table>
+            {products.length == 0 &&
+                <div className="flex mt-6 w-full justify-center">
+                    <Spinner />
+                </div>
+            }
         </Layout>
     )
 }

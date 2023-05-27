@@ -2,6 +2,7 @@ import Layout from "@/components/Layout";
 import axios from "axios";
 import { withSwal } from 'react-sweetalert2';
 import { useEffect, useState } from "react";
+import Spinner from "@/components/Spinner";
 
 function Categories({ swal }) {
     const [editedCategory, setEditedCategory] = useState(null)
@@ -23,11 +24,11 @@ function Categories({ swal }) {
         setName(category.name)
         setParentCategory(category.parentCategory)
         setProperties(
-            category.properties.map(({name,values})=>({
+            category.properties.map(({ name, values }) => ({
                 name,
-                values:values.join(', ')
+                values: values.join(', ')
             }))
-            )
+        )
     }
     const deleteCategory = (category) => {
         swal.fire({
@@ -50,10 +51,11 @@ function Categories({ swal }) {
     }
     const saveCategory = async (ev) => {
         ev.preventDefault()
-        const data = { name, parentCategory,
-            properties:properties.map(p=>{
-                return { name:p.name, values:p.values.split(',') }
-            }) 
+        const data = {
+            name, parentCategory,
+            properties: properties.map(p => {
+                return { name: p.name, values: p.values.split(',') }
+            })
         }
         if (editedCategory) {
             let _id = editedCategory._id
@@ -128,8 +130,8 @@ function Categories({ swal }) {
                             setParentCategory('')
                             setProperties([])
                         }
-                        } 
-                        type="button" className="btn-default py-1">Cancel</button>
+                        }
+                            type="button" className="btn-default py-1">Cancel</button>
                     )}
                     <button type="submit" className="btn-primary py-1">Save</button>
                 </div>
@@ -157,6 +159,11 @@ function Categories({ swal }) {
                     </tbody>
                 </table>
             )}
+            {categories.length == 0 &&
+                <div className="flex mt-6 w-full justify-center">
+                    <Spinner />
+                </div>
+            }
         </Layout>
     )
 }
