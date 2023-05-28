@@ -4,8 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import Spinner from "./Spinner";
 import { ReactSortable } from "react-sortablejs";
 
-export default function ProductForm({ _id, title: existingTitle, description: existingDescription, price: existingPrice, images: existingImages, category: existingCategory, properties: existingProperties }) {
+export default function ProductForm({ _id, title: existingTitle, description: existingDescription, price: existingPrice, images: existingImages, category: existingCategory, properties: existingProperties,stock: existingStock}) {
     const [title, setTitle] = useState(existingTitle || '')
+    const [stock, setStock] = useState(existingStock || 0)
     const [description, setDescription] = useState(existingDescription || '')
     const [price, setPrice] = useState(existingPrice || '')
     const [images, setImages] = useState(existingImages || [])
@@ -30,7 +31,7 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
     };
     const setProduct = async (ev) => {//create product and update it if exists
         ev.preventDefault()
-        const data = { title, description, price, images, category, properties: productProperties,deletedImages }
+        const data = { title, description, price, images, category, properties: productProperties, deletedImages,stock }
         if (_id) {
             //update
             await axios.put(`/api/products`, { ...data, _id })
@@ -96,8 +97,16 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
     }
     return (
         <form onSubmit={setProduct}>
-            <label>Product name</label>
-            <input type="text" placeholder="product name" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <div className="flex gap-1 mb-2 w-full justify-between">
+                <div className="w-1/2" >
+                    <label>Product name</label>
+                    <input type="text" placeholder="product name" value={title} onChange={(e) => setTitle(e.target.value)} />
+                </div>
+                <div className="w-1/2" >
+                    <label>Stock</label>
+                    <input type="number" placeholder="product quantity" value={stock} onChange={(e) =>{e.target.value>=0?setStock(e.target.value):setStock(0)}} />
+                </div>
+            </div>
             <label>Category</label>
             <select value={category} onChange={ev => setCategory(ev.target.value)}>
                 <option value="">Uncategorized</option>
@@ -155,9 +164,9 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
             <label>Description</label>
             <textarea placeholder="description" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
             <label>Price</label>
-            <input type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
+            <input type="number" placeholder="Price" value={price} onChange={(e) => {e.target.value>=0?setPrice(e.target.value):setPrice(0)}} />
             <button type="submit" className="btn-primary">Save Product</button>
-            <button type="button" onClick={()=>setGoToProducts(true)} className="btn-default ml-5">Back</button>
+            <button type="button" onClick={() => setGoToProducts(true)} className="btn-default ml-5">Back</button>
         </form>
     )
 }

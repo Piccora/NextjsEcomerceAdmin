@@ -13,7 +13,6 @@ export default function DeleteProductPage() {
         }
         axios.get('/api/products?id=' + id).then(res => {
             setProductInfo(res.data)
-            console.log(res.data)
         })
     }, [id])
     function goBack() {

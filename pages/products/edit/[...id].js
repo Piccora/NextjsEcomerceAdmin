@@ -14,7 +14,6 @@ export default function EditProductPage() {
         }
         axios.get('/api/products?id=' + id).then(res => {
             setProductInfo(res.data)
-            console.log(res.data)
         })
     }, [id])
     return (

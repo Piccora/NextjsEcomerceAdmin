@@ -53,11 +53,11 @@ export default async function handle(req, res) {
                 description: req.body.description,
                 images: req.body.images,
                 properties: req.body.properties,
-                category: req.body.category
+                category: req.body.category,
+                stock:req.body.stock
             }
             deleteByURL(req.body.deletedImages)
             return uploadProduct(data).then(() => {
-                console.log('res', res.json);
                 return res.status(200).send();
             })
                 .catch((error) => {
@@ -73,11 +73,11 @@ export default async function handle(req, res) {
                 images: req.body.images,
                 category: req.body.category,
                 properties: req.body.properties,
+                stock:req.body.stock,
                 id: req.body._id
             }
             deleteByURL(req.body.deletedImages)
             return updateProduct(data).then(() => {
-                console.log('res', res.json);
                 return res.status(200).send();
             })
                 .catch((error) => {
@@ -111,7 +111,6 @@ export default async function handle(req, res) {
                     }
                   })
                 deleteByURL(delList)
-                console.log(delList,imageList)
                 return res.status(200).send('ok')
             }
         }
