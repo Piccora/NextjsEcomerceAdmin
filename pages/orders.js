@@ -27,6 +27,7 @@ export default function OrdersPage() {
             <th>Date</th>
             <th>Recipient</th>
             <th>Products</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody className="slim">
@@ -51,6 +52,7 @@ export default function OrdersPage() {
                     </>
                   ))}
                 </td>
+                <td>Pending</td>
               </tr>
             )
           })}
