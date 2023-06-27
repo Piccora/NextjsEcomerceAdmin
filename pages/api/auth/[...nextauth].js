@@ -3,6 +3,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import { FirestoreAdapter } from "@next-auth/firebase-adapter";
 import { firestore } from '@/lib/firebase/firestore';
 import storeAnyUser from '@/lib/firebase/storeAnyUser';
+import { getServerSession } from 'next-auth';
 
 const adminEmails = ['minhhoangnguyen19122004@gmail.com', 'eaplimitedvn@gmail.com', 'authorizedworker@gmail.com'];
 
