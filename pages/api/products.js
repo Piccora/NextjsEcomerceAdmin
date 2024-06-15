@@ -3,26 +3,28 @@ import getProducts from "@/lib/firebase/getProducts"
 import updateProduct from "@/lib/firebase/updateProduct"
 import uploadProduct from "@/lib/firebase/uploadProduct"
 import deleteProduct from "@/lib/firebase/deleteProduct"
-import { isAdminRequest } from "./auth/[...nextauth]"
 import { Storage } from '@google-cloud/storage';
+import { stripe } from "@/lib/stripe/stripe";
+import categories from "../categories"
 
 const storage = new Storage({
     projectId: process.env.FIREBASE_PROJECT_ID,
     credentials: {
       client_email: process.env.FIREBASE_CLIENT_EMAIL,
-      private_key: process.env.FIREBASE_PRIVATE_KEY,
+      private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/gm, "\n"),
     },
   });
 const bucketName=process.env.BUCKET_NAME
+const publicUrl=`https://storage.googleapis.com/${process.env.FIREBASE_STORAGE_BUCKET}/`
 const bucket = storage.bucket(bucketName);
 const deleteByURL = (imagesList) => {
     for (const imageURL of imagesList) {
-        const fileName = imageURL.slice(55);
+        // Need fix soon
+        const fileName = imageURL.slice(publicUrl.length);
         bucket.file(fileName).delete();
     }
 }
 export default async function handle(req, res) {
-    await isAdminRequest(req, res)
     const { method } = req //==method=req.method
     if (res.statusCode === 200) {
         if (method === 'GET') {
@@ -54,9 +56,25 @@ export default async function handle(req, res) {
                 images: req.body.images,
                 properties: req.body.properties,
                 category: req.body.category,
-                stock:req.body.stock
+                stock: req.body.stock,
             }
             deleteByURL(req.body.deletedImages)
+            try {
+                const product = await stripe.products.create({
+                    name: data.title,
+                    description: data.description,
+                    images: data.images,
+                    default_price_data: {
+                        currency: "VND",
+                        unit_amount: data.price,
+                    }
+                 });
+                data["stripeId"] = product.default_price;
+                data["productId"] = product.id;
+            } catch (error) {
+                console.log('error', error);
+                return res.status(500).send(error);
+            }
             return uploadProduct(data).then(() => {
                 return res.status(200).send();
             })
@@ -74,9 +92,46 @@ export default async function handle(req, res) {
                 category: req.body.category,
                 properties: req.body.properties,
                 stock:req.body.stock,
-                id: req.body._id
+                id: req.body._id,
+                productId: req.body.productId,
+                stripeId: req.body.stripeId
             }
             deleteByURL(req.body.deletedImages)
+            let price = 0;
+            try {
+                price = await stripe.prices.create({
+                    currency: 'vnd',
+                    unit_amount: data.price,
+                    product: data.productId
+                });
+            } catch (error) {
+                console.log('error', error);
+                return res.status(500).send(error);
+            }
+
+            try {
+                const product = await stripe.products.update(data.productId, {
+                    name: data.title,
+                    description: data.description,
+                    images: data.images,
+                    default_price: price.id
+                 });
+            } catch (error) {
+                console.log('error', error);
+                return res.status(500).send(error);
+            }
+
+            try {
+                const oldPrice = await stripe.prices.update(data.stripeId, {
+                    active: false
+                });
+            } catch (error) {
+                console.log('error', error);
+                return res.status(500).send(error);
+            }
+
+            data["stripeId"] = price.id
+            
             return updateProduct(data).then(() => {
                 return res.status(200).send();
             })
@@ -88,6 +143,20 @@ export default async function handle(req, res) {
         else if (method === 'DELETE') {
             if (req.query?.id) {
                 const data = await getProduct(req.query?.id)
+                const deleted = await stripe.products.update(data.productId, {
+                    active: false
+                });;
+
+                try {
+                    const oldPrice = await stripe.prices.update(data.stripeId, {
+                        active: false
+                    });
+                } catch (error) {
+                    console.log('error', error);
+                    return res.status(500).send(error);
+                }
+    
+
                 deleteByURL(data.images)
                 return deleteProduct(req.query?.id)
                     .then((data) => {
@@ -106,7 +175,7 @@ export default async function handle(req, res) {
                 let delList=[]
                 files.forEach(file => {
                     let publicUrl = url.concat(bucketName,'/',file.name)
-                    if(publicUrl!='https://storage.googleapis.com/shop-384517.appspot.com/ProductImages/' && !imageList.includes(publicUrl) ){
+                    if(publicUrl!=`https://storage.googleapis.com/${process.env.FIREBASE_STORAGE_BUCKET}/ProductImages/` && !imageList.includes(publicUrl) ){
                         delList.push(publicUrl)
                     }
                   })

@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Spinner from "./Spinner";
 import { ReactSortable } from "react-sortablejs";
 
-export default function ProductForm({ _id, title: existingTitle, description: existingDescription, price: existingPrice, images: existingImages, category: existingCategory, properties: existingProperties,stock: existingStock}) {
+export default function ProductForm({ _id, title: existingTitle, description: existingDescription, price: existingPrice, images: existingImages, category: existingCategory, properties: existingProperties,stock: existingStock, stripeId: stripeId, productId: productId}) {
     const [title, setTitle] = useState(existingTitle || '')
     const [stock, setStock] = useState(existingStock || 0)
     const [description, setDescription] = useState(existingDescription || '')
@@ -31,7 +31,7 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
     };
     const setProduct = async (ev) => {//create product and update it if exists
         ev.preventDefault()
-        const data = { title, description, price, images, category, properties: productProperties, deletedImages,stock }
+        const data = { title, description, price, images, category, properties: productProperties, deletedImages, stock, stripeId, productId }
         if (_id) {
             //update
             await axios.put(`/api/products`, { ...data, _id })

@@ -5,7 +5,8 @@ import { firestore } from '@/lib/firebase/firestore';
 import storeAnyUser from '@/lib/firebase/storeAnyUser';
 import { getServerSession } from 'next-auth';
 
-const adminEmails = ['minhhoangnguyen19122004@gmail.com', 'eaplimitedvn@gmail.com', 'authorizedworker@gmail.com'];
+// const adminEmails = ['minhhoangnguyen19122004@gmail.com', 'eaplimitedvn@gmail.com', 'authorizedworker@gmail.com'];
+const adminEmails = ['tatuanminh31032004@gmail.com']
 
 const authOptions = {
   adapter: FirestoreAdapter(firestore),
