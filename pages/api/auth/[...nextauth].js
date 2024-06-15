@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-import { FirestoreAdapter } from "@next-auth/firebase-adapter";
+import { FirebaseAdapter } from '@next-auth/firebase-adapter';
 import { firestore } from '@/lib/firebase/firestore';
 import storeAnyUser from '@/lib/firebase/storeAnyUser';
 import { getServerSession } from 'next-auth';
@@ -9,7 +9,7 @@ import { getServerSession } from 'next-auth';
 const adminEmails = ['tatuanminh31032004@gmail.com']
 
 const authOptions = {
-  adapter: FirestoreAdapter(firestore),
+  adapter: FirebaseAdapter(firestore),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
