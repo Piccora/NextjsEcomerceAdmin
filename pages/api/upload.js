@@ -1,17 +1,17 @@
 import { IncomingForm } from 'formidable';
 import { Storage } from '@google-cloud/storage';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
+// import { isAdminRequest } from './auth/[...nextauth]';
 
 const storage = new Storage({
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    projectId: process.env.FIREBASE_PROJECT_ID,
     credentials: {
       client_email: process.env.FIREBASE_CLIENT_EMAIL,
       private_key: process.env.FIREBASE_PRIVATE_KEY,
     },
   });
-const bucketName=process.env.BUCKET_NAME
-const bucket = storage.bucket(bucketName);
+const bucket = storage.bucket('shop-384517.appspot.com');
 export default async function handleUpload(req, res) {
+    // await isAdminRequest(req, res);
     const { method } = req
     if (res.statusCode === 200) {
         if (method === 'POST') {
@@ -31,7 +31,7 @@ export default async function handleUpload(req, res) {
                     await bucket.upload(file.filepath, {
                         destination: `ProductImages/${newFileName}`,
                     });
-                    const url = `https://storage.googleapis.com/test-project-ee48e.appspot.com/ProductImages/${newFileName}`
+                    const url = `https://storage.googleapis.com/${process.env.FIREBASE_STORAGE_BUCKET}/ProductImages/${newFileName}`
                     urls.push(url);
                 }
                 return res.status(200).send(urls);
