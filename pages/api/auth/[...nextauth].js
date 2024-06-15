@@ -16,6 +16,7 @@ const authOptions = {
       clientSecret: process.env.GOOGLE_SECRET,
     }),
   ],
+  secret: process.env.SECRET,
   callbacks: {
     session: async ({ session, user }) => {
       if (adminEmails.includes(user.email)) {
