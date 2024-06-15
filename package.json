@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/firebase-adapter": "^2.2.0",
     "@firebase/storage": "^0.11.2",
     "@google-cloud/storage": "^6.9.5",
     "@next-auth/firebase-adapter": "^0.0.2-canary.207",
