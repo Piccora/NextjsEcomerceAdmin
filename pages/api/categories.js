@@ -2,10 +2,10 @@ import createCategory from "@/lib/firebase/createCategory"
 import getCategories from "@/lib/firebase/getCategories";
 import updateCategory from "@/lib/firebase/updateCategory";
 import deleteCategory from "@/lib/firebase/deleteCategory";
-import { isAdminRequest } from "./auth/[...nextauth]";
+// import { isAdminRequest } from "./auth/[...nextauth]";
 
 export default async function handle(req, res) {
-    await isAdminRequest(req, res)
+    // await isAdminRequest(req, res)
     const { method } = req
     if (res.statusCode === 200) {
         if (method === 'GET') {

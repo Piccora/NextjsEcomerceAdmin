@@ -17,7 +17,6 @@ function Categories({ swal }) {
     }
     useEffect(() => {
         fetchCategories()
-        console.log(categories)
     }, [])
     const editCategory = (category) => {
         setEditedCategory(category)

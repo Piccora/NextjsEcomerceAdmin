@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-import { FirebaseAdapter } from '@next-auth/firebase-adapter';
+import { FirestoreAdapter } from '@auth/firebase-adapter';
 import { firestore } from '@/lib/firebase/firestore';
 import storeAnyUser from '@/lib/firebase/storeAnyUser';
 import { getServerSession } from 'next-auth';
@@ -9,16 +9,20 @@ import { getServerSession } from 'next-auth';
 const adminEmails = ['tatuanminh31032004@gmail.com']
 
 const authOptions = {
-  adapter: FirebaseAdapter(firestore),
+  adapter: FirestoreAdapter(firestore),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
   secret: process.env.SECRET,
+  events: {
+    session: async (message) => { console.log("Session is active") },
+  },
   callbacks: {
-    session: async ({ session, user }) => {
+    async session({ session, user }) {
       if (adminEmails.includes(user.email)) {
         return session;
       }
@@ -26,8 +30,11 @@ const authOptions = {
       console.log('Not authenticated as admin');
       return null;
     },
-    signIn: async ({ user }) => {
+    async signIn({ user, account, profile }) {
       // Store user account information in your database here
+      // console.log(account)
+      // console.log(profile)
+      // console.log(user)
       storeAnyUser(user);
 
       if (!adminEmails.includes(user.email)) {
