@@ -5,7 +5,7 @@ import uploadProduct from "@/lib/firebase/uploadProduct"
 import deleteProduct from "@/lib/firebase/deleteProduct"
 import { Storage } from '@google-cloud/storage';
 import { stripe } from "@/lib/stripe/stripe";
-import categories from "../categories"
+import { isAdminRequest } from "./auth/[...nextauth]"
 
 const storage = new Storage({
     projectId: process.env.FIREBASE_PROJECT_ID,
@@ -24,6 +24,7 @@ const deleteByURL = (imagesList) => {
     }
 }
 export default async function handle(req, res) {
+    await isAdminRequest(req, res)
     const { method } = req //==method=req.method
     if (res.statusCode === 200) {
         if (method === 'GET') {
