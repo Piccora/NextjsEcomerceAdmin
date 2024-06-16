@@ -6,8 +6,8 @@ import storeAnyUser from '@/lib/firebase/storeAnyUser';
 import { getServerSession } from 'next-auth';
 
 const adminEmails = process.env.ADMIN_EMAILS.split(' ')
- 
-export default NextAuth({
+
+const authOptions = {
   adapter: FirestoreAdapter(firestore),
   providers: [
     GoogleProvider({
@@ -36,7 +36,9 @@ export default NextAuth({
       return true; // Allow admin users to sign in
     },
   },
-})
+}
+
+export default NextAuth(authOptions)
 
 export async function isAdminRequest(req, res) {
   const session = await getServerSession(req,res,authOptions)
