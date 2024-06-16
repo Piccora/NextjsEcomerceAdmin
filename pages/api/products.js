@@ -11,7 +11,7 @@ const storage = new Storage({
     projectId: process.env.FIREBASE_PROJECT_ID,
     credentials: {
       client_email: process.env.FIREBASE_CLIENT_EMAIL,
-      private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/gm, "\n"),
+      private_key: process.env.FIREBASE_PRIVATE_KEY,
     },
   });
 const bucketName=process.env.BUCKET_NAME
@@ -19,7 +19,6 @@ const publicUrl=`https://storage.googleapis.com/${process.env.FIREBASE_STORAGE_B
 const bucket = storage.bucket(bucketName);
 const deleteByURL = (imagesList) => {
     for (const imageURL of imagesList) {
-        // Need fix soon
         const fileName = imageURL.slice(publicUrl.length);
         bucket.file(fileName).delete();
     }

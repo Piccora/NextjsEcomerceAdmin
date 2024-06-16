@@ -1,8 +1,8 @@
 import getOrders from "@/lib/firebase/getOrders";
-// import { isAdminRequest } from "./auth/[...nextauth]";
+import { isAdminRequest } from "./auth/[...nextauth]";
 
 export default async function handle(req, res) {
-    // await isAdminRequest(req, res)
+    await isAdminRequest(req, res)
     const { method } = req //==method=req.method
     if (res.statusCode === 200) {
         if (method === 'GET') {

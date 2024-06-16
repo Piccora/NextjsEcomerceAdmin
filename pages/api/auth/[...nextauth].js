@@ -5,22 +5,17 @@ import { firestore } from '@/lib/firebase/firestore';
 import storeAnyUser from '@/lib/firebase/storeAnyUser';
 import { getServerSession } from 'next-auth';
 
-// const adminEmails = ['minhhoangnguyen19122004@gmail.com', 'eaplimitedvn@gmail.com', 'authorizedworker@gmail.com'];
-const adminEmails = ['tatuanminh31032004@gmail.com']
-
-const authOptions = {
+const adminEmails = process.env.ADMIN_EMAILS.split(' ')
+ 
+export default NextAuth({
   adapter: FirestoreAdapter(firestore),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
-      allowDangerousEmailAccountLinking: true,
     }),
   ],
   secret: process.env.SECRET,
-  events: {
-    session: async (message) => { console.log("Session is active") },
-  },
   callbacks: {
     async session({ session, user }) {
       if (adminEmails.includes(user.email)) {
@@ -28,13 +23,11 @@ const authOptions = {
       }
 
       console.log('Not authenticated as admin');
-      return null;
+      return session;
     },
     async signIn({ user, account, profile }) {
       // Store user account information in your database here
-      // console.log(account)
-      // console.log(profile)
-      // console.log(user)
+      user["account"] = account
       storeAnyUser(user);
 
       if (!adminEmails.includes(user.email)) {
@@ -43,9 +36,7 @@ const authOptions = {
       return true; // Allow admin users to sign in
     },
   },
-};
-
-export default NextAuth(authOptions);
+})
 
 export async function isAdminRequest(req, res) {
   const session = await getServerSession(req,res,authOptions)
