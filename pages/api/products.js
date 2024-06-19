@@ -3,8 +3,8 @@ import getProducts from "@/lib/firebase/getProducts"
 import updateProduct from "@/lib/firebase/updateProduct"
 import uploadProduct from "@/lib/firebase/uploadProduct"
 import deleteProduct from "@/lib/firebase/deleteProduct"
-import { Storage } from '@google-cloud/storage';
-import { stripe } from "@/lib/stripe/stripe";
+import { Storage } from '@google-cloud/storage'
+import { stripe } from "@/lib/stripe/stripe"
 import { isAdminRequest } from "./auth/[...nextauth]"
 
 const storage = new Storage({
