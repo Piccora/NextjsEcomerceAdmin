@@ -20,7 +20,7 @@ export default async function handle(req, res) {
         }
         else if (method === 'POST') {
             const data = {
-                name: req.body.name,
+                name: req.body.name.toLowerCase(),
                 parentCategory: req.body.parentCategory,
                 properties: req.body.properties,
             }
@@ -34,7 +34,7 @@ export default async function handle(req, res) {
         }
         else if (method === 'PUT') {
             const data = {
-                name: req.body.name,
+                name: req.body.name.toLowerCase(),
                 parentCategory: req.body.parentCategory,
                 properties: req.body.properties,
                 _id: req.body._id
