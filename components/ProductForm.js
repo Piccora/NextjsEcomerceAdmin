@@ -84,10 +84,10 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
 
     const propertiesToFill = []
     if (categories.length > 0 && category) {
-        let selCatInfo = categories.find(({ _id }) => decodeURI(_id) === category)
+        let selCatInfo = categories.find(({ _id }) => encodeURI(_id) === category)
         propertiesToFill.push(...selCatInfo.properties)
         while (selCatInfo.parentCategory != '') {
-            const parentCatInfo = categories.find(({ _id }) => decodeURI(_id) === selCatInfo.parentCategory)
+            const parentCatInfo = categories.find(({ _id }) => encodeURI(_id) === selCatInfo.parentCategory)
             if (typeof (parentCatInfo) == "undefined") {
                 break
             }
