@@ -85,7 +85,8 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
     const propertiesToFill = []
     if (categories.length > 0 && category) {
         let selCatInfo = categories.find(({ _id }) => decodeURI(_id) === category)
-        propertiesToFill.push(...selCatInfo.properties)
+        if (selCatInfo) {
+            propertiesToFill.push(...selCatInfo.properties)
         while (selCatInfo.parentCategory != '') {
             const parentCatInfo = categories.find(({ _id }) => decodeURI(_id) === selCatInfo.parentCategory)
             if (typeof (parentCatInfo) == "undefined") {
@@ -93,6 +94,7 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
             }
             propertiesToFill.push(...parentCatInfo.properties)
             selCatInfo = parentCatInfo
+        }
         }
     }
     return (
@@ -108,7 +110,7 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
                 </div>
             </div>
             <label>Category</label>
-            <select value={category} onChange={ev => setCategory(ev.target.value)}>
+            <select value={category ? category : ""} onChange={ev => setCategory(ev.target.value)}>
                 <option value="">Uncategorized</option>
                 {categories.length > 0 && categories.map(category => {
                     return (
