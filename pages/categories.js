@@ -22,6 +22,7 @@ function Categories({ swal }) {
         setEditedCategory(category)
         setName(category.name)
         setParentCategory(category.parentCategory)
+        setCategories(categories.filter((parentCategory) => parentCategory.name != category.name))
         setProperties(
             category.properties.map(({ name, values }) => ({
                 name,
@@ -128,6 +129,7 @@ function Categories({ swal }) {
                             setName('')
                             setParentCategory('')
                             setProperties([])
+                            fetchCategories()
                         }
                         }
                             type="button" className="btn-default py-1">Cancel</button>
