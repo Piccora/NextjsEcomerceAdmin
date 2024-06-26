@@ -102,15 +102,15 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
             <div className="flex gap-1 mb-2 w-full justify-between">
                 <div className="w-1/2" >
                     <label>Product name</label>
-                    <input type="text" placeholder="product name" value={title} onChange={(e) => setTitle(e.target.value)} />
+                    <input type="text" placeholder="product name" value={title} onChange={(e) => setTitle(e.target.value)} className='text-black'/>
                 </div>
                 <div className="w-1/2" >
                     <label>Stock</label>
-                    <input type="number" placeholder="product quantity" value={stock} onChange={(e) =>{e.target.value>=0?setStock(e.target.value):setStock(0)}} />
+                    <input type="number" placeholder="product quantity" value={stock} onChange={(e) =>{e.target.value>=0?setStock(e.target.value):setStock(0)}} className='text-black'/>
                 </div>
             </div>
             <label>Category</label>
-            <select value={category ? category : ""} onChange={ev => setCategory(ev.target.value)}>
+            <select value={category ? category : ""} onChange={ev => setCategory(ev.target.value)} className='text-black'>
                 <option value="">Uncategorized</option>
                 {categories.length > 0 && categories.map(category => {
                     return (
@@ -164,9 +164,9 @@ export default function ProductForm({ _id, title: existingTitle, description: ex
                 </button>
             </div>
             <label>Description</label>
-            <textarea placeholder="description" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+            <textarea placeholder="description" value={description} onChange={(e) => setDescription(e.target.value)} className='text-black'></textarea>
             <label>Price</label>
-            <input type="number" placeholder="Price" value={price} onChange={(e) => {e.target.value>=0?setPrice(e.target.value):setPrice(0)}} />
+            <input type="number" placeholder="Price" value={price} onChange={(e) => {e.target.value>=0?setPrice(e.target.value):setPrice(0)}} className='text-black'/>
             <button type="submit" className="btn-primary">Save Product</button>
             <button type="button" onClick={() => setGoToProducts(true)} className="btn-default ml-5">Back</button>
         </form>

@@ -3,7 +3,8 @@ import Nav from './Nav'
 import { useState } from "react"
 import Logo from "./Logo"
 export default function Layout({ children }) {
-  const { data: session } = useSession()
+  // const { data: session } = useSession()
+  const [session, setSession] = useState(true)
   const [showNav, setShowNav] = useState(false)
   if (!session) {
     return (

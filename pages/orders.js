@@ -24,10 +24,10 @@ export default function OrdersPage() {
       <table className="basic">
         <thead>
           <tr className="border-b-2">
-            <th>Date</th>
-            <th>Recipient</th>
-            <th>Products</th>
-            <th>Status</th>
+            <th className='text-black'>Date</th>
+            <th className='text-black'>Recipient</th>
+            <th className='text-black'>Products</th>
+            <th className='text-black'>Status</th>
           </tr>
         </thead>
         <tbody className="slim">
@@ -35,9 +35,9 @@ export default function OrdersPage() {
             const paid = order.transactionID != '' && order.transactionID != null && order.transactionID != undefined
             return (
               <tr key={order._id} className="border-b-2">
-                <td>{(new Date(order.createdAt)).toLocaleString()}
+                <td className='text-black'>{(new Date(order.createdAt)).toLocaleString()}
                 </td>
-                <td>
+                <td className='text-black'>
                   {order.name} <br />
                   {order.email}<br />
                   {order.address} <br />

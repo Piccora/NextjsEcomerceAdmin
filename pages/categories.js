@@ -101,8 +101,8 @@ function Categories({ swal }) {
             <label>{editedCategory ? `Edit category ${editedCategory.name}` : 'Create new category'}</label>
             <form onSubmit={saveCategory}>
                 <div className="flex gap-1">
-                    <input value={name} onChange={ev => setName(ev.target.value)} type="text" placeholder={"category name"} className="mb-0" />
-                    <select onChange={ev => setParentCategory(ev.target.value)} value={parentCategory} className="mb-0" >
+                    <input value={name} onChange={ev => setName(ev.target.value)} type="text" placeholder={"category name"} className="mb-0 text-black" />
+                    <select onChange={ev => setParentCategory(ev.target.value)} value={parentCategory} className="mb-0 text-black" >
                         <option value="">No parent category</option>
                         {categories.length > 0 && categories.map(category => (
                             <option key={category._id} value={category.name}>{category.name}</option>
@@ -115,8 +115,8 @@ function Categories({ swal }) {
                     {properties.length > 0 && properties.map((property, index) => {
                         return (
                             <div key={property._id} className="flex gap-1 mb-2">
-                                <input value={property.name} onChange={(ev) => handlePropertyNameChange(index, property, ev.target.value)} type="text" placeholder={"property name"} className="mb-0" />
-                                <input value={property.values} onChange={(ev) => handlePropertyValuesChange(index, property, ev.target.value)} type="text" placeholder={"property value"} className="mb-0" />
+                                <input value={property.name} onChange={(ev) => handlePropertyNameChange(index, property, ev.target.value)} type="text" placeholder={"property name"} className="mb-0 text-black" />
+                                <input value={property.values} onChange={(ev) => handlePropertyValuesChange(index, property, ev.target.value)} type="text" placeholder={"property value"} className="mb-0 text-black" />
                                 <button onClick={() => removeProperty(index)} type="button" className="btn-red">Remove</button>
                             </div>
                         )
@@ -149,8 +149,8 @@ function Categories({ swal }) {
                     <tbody>
                         {categories.length > 0 && categories.map(category => (
                             <tr key={category._id}>
-                                <td>{category.name}</td>
-                                <td>{category.parentCategory}</td>
+                                <td className='text-black'>{category.name}</td>
+                                <td className='text-black'>{category.parentCategory}</td>
                                 <td>
                                     <button onClick={() => editCategory(category)} className="btn-default mr-1">Edit</button>
                                     <button onClick={() => deleteCategory(category)} className="btn-red">Delete</button>
